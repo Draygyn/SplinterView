@@ -8,7 +8,7 @@ async function fetchPlayerData() {
 
     try {
         // Fetch data from the Cloudflare Worker
-        const response = await fetch(`https://your-worker-id.workers.dev?player=${playerName}`);
+        const response = await fetch(dry-bread-7ec1.dave-macd0426.workers.dev?player=${playerName}`);
         if (!response.ok) throw new Error('Failed to fetch player data');
         
         // Parse JSON data
