@@ -38,6 +38,39 @@ function handleFetchClick() {
     <input type="text" id="player-name" placeholder="Enter player name">
     <button onclick="handleFetchClick()">Fetch Player Data</button>
 </div>
+
+// Function to fetch data from the Cloudflare Worker using player name
+async function fetchPlayerData(playerName) {
+    try {
+        // URL to your Cloudflare Worker, with player name as a query parameter
+        const response = await fetch(`https://dry-bread-7ec1.dave-macd0426.workers.dev?player=${playerName}`);
+        
+        // Check if the response is OK (status 200-299)
+        if (!response.ok) throw new Error('Failed to fetch player data');
+        
+        // Parse the response data (assuming JSON format)
+        const data = await response.json();
+        
+        // Log or display the fetched data
+        console.log('Player data:', data);
+        document.getElementById('player-info').innerText = JSON.stringify(data, null, 2);
+
+    } catch (error) {
+        console.error('Error fetching player data:', error);
+    }
+}
+
+// Example function to handle button click to fetch data
+function handleFetchClick() {
+    // Get the player name from an input field
+    const playerName = document.getElementById('player-name').value;
+    if (playerName) {
+        fetchPlayerData(playerName);
+    } else {
+        console.error('Player name is required.');
+    }
+}
+
 <pre id="player-info">Player data will appear here.</pre>
 */
 
