@@ -4,22 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SplinterView</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>SplinterView</h1>
-    <p>Enter a player’s name to view their Splinterlands account details.</p>
-    
-    <form id="playerForm">
-      <input type="text" id="playerName" placeholder="Enter player name" required>
-      <button type="submit">View Account</button>
-    </form>
-    
-    <div id="playerData">
-      <!-- Player data will be displayed here -->
-    </div>
-  </div>
+  <header>
+    <h1>Welcome to SplinterView</h1>
+    <p>View and explore your Splinterlands card collection at different league levels.</p>
+  </header>
+
+  <main>
+    <input type="text" id="username" placeholder="Enter Splinterlands username">
+    <button id="fetch-cards">View Collection</button>
+    <section id="cards-container"></section>
+  </main>
 
   <script src="script.js"></script>
 </body>
