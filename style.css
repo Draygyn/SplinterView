@@ -1,60 +1,40 @@
-/* Basic reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f3f4f6;
-}
-
-.container {
-  width: 100%;
-  max-width: 600px;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
   text-align: center;
-  background-color: white;
+}
+
+header {
+  background: #6200ea;
+  color: #fff;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
+main {
+  padding: 20px;
 }
 
-form {
-  margin: 20px 0;
-}
-
-input[type="text"] {
-  width: 70%;
+input {
   padding: 10px;
-  margin-right: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin-right: 10px;
+  width: 200px;
 }
 
 button {
-  padding: 10px 15px;
+  padding: 10px 20px;
+  background: #6200ea;
+  color: #fff;
   border: none;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 4px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #45a049;
+  background: #3700b3;
 }
 
-#playerData {
+#cards-container {
   margin-top: 20px;
-  text-align: left;
 }
