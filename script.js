@@ -1,5 +1,4 @@
 document.getElementById('fetch-cards').addEventListener('click', async function() {
-  // Get the username from the input field
   const username = document.getElementById('username').value.trim();
 
   if (!username) {
@@ -8,36 +7,49 @@ document.getElementById('fetch-cards').addEventListener('click', async function(
   }
 
   try {
-    // Fetch data from your Cloudflare Worker
-    const response = await fetch(`https://your-worker-name.workers.dev/?player=${username}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // Fetch player collection
+    const collectionResponse = await fetch(`https://your-worker-name.workers.dev/?player=${username}`);
+    const collectionData = await collectionResponse.json();
 
-    const data = await response.json();
-    displayCards(data.cards);
+    // Fetch card details
+    const detailsResponse = await fetch('https://api.splinterlands.io/cards/get_details');
+    const cardDetails = await detailsResponse.json();
+
+    // Combine the two datasets
+    displayCards(collectionData.cards, cardDetails);
   } catch (error) {
-    console.error('Error fetching player data:', error);
-    alert('Failed to fetch player data. Please check the username or try again later.');
+    console.error('Error fetching data:', error);
+    alert('Failed to fetch player data or card details.');
   }
 });
 
-function displayCards(cards) {
+function displayCards(playerCards, allCardDetails) {
   const container = document.getElementById('cards-container');
   container.innerHTML = ''; // Clear previous results
 
-  if (cards.length === 0) {
+  if (playerCards.length === 0) {
     container.innerHTML = '<p>No cards found for this player.</p>';
     return;
   }
 
-  cards.forEach(card => {
-    const cardElement = document.createElement('div');
-    cardElement.innerHTML = `
-      <h3>Card ID: ${card.card_detail_id}</h3>
-      <p>Level: ${card.level}</p>
-    `;
-    container.appendChild(cardElement);
+  playerCards.forEach(card => {
+    const cardDetail = allCardDetails.find(detail => detail.id == card.card_detail_id);
+
+    if (cardDetail) {
+      const cardElement = document.createElement('div');
+      cardElement.style.border = "1px solid #ddd";
+      cardElement.style.margin = "10px";
+      cardElement.style.padding = "10px";
+      cardElement.style.background = "#fff";
+
+      cardElement.innerHTML = `
+        <img src="https://d36mxiodymuqjm.cloudfront.net/cards_by_level/${cardDetail.name.toLowerCase().replace(/\s+/g, '_')}_lv${card.level}.png" alt="${cardDetail.name}" style="width:100%;">
+        <h3>${cardDetail.name}</h3>
+        <p>Level: ${card.level}</p>
+        <p>Gold: ${card.gold ? "Yes" : "No"}</p>
+      `;
+
+      container.appendChild(cardElement);
+    }
   });
 }
