@@ -1,25 +1,22 @@
 document.getElementById('fetch-cards').addEventListener('click', async function() {
   // Get the username from the input field
   const username = document.getElementById('username').value.trim();
-  
+
   if (!username) {
     alert('Please enter a username');
     return;
   }
 
   try {
-    // Use CORS proxy for development if needed (remove when CORS is resolved)
-    const corsProxy = "https://cors-anywhere.herokuapp.com/";
-    const apiUrl = `https://api.splinterlands.io/cards/collection/${username}`;
+    // Fetch data from your Cloudflare Worker
+    const response = await fetch(`https://your-worker-name.workers.dev/?player=${username}`);
     
-    const response = await fetch(corsProxy + apiUrl); // Add CORS proxy for local testing
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
     displayCards(data.cards);
-
   } catch (error) {
     console.error('Error fetching player data:', error);
     alert('Failed to fetch player data. Please check the username or try again later.');
