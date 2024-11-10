@@ -37,19 +37,6 @@ button:hover {
   background-color: #3700b3;
 }
 
-
-button {
-  padding: 10px 20px;
-  background: #6200ea;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #3700b3;
-}
-
 #cards-container {
   margin-top: 20px;
 }
