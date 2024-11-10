@@ -5,16 +5,18 @@ document.getElementById('fetch-cards').addEventListener('click', async function(
     return;
   }
 
-  const response = await fetch(`https://api.splinterlands.io/cards/collection/${username}`);
-  const data = await response.json();
-
-  displayCards(data.cards);
+  try {
+    const response = await fetch(`https://api.splinterlands.io/cards/collection/${username}`);
+    const data = await response.json();
+    displayCards(data.cards);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 });
 
 function displayCards(cards) {
   const container = document.getElementById('cards-container');
   container.innerHTML = ''; // Clear previous results
-
   cards.forEach(card => {
     const cardElement = document.createElement('div');
     cardElement.innerHTML = `
