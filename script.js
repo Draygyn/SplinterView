@@ -1,40 +1,36 @@
-console.log("script.js loaded!");
-
-// Event listener for the button
-document.getElementById('fetch-cards').addEventListener('click', async function () {
-  const username = document.getElementById('username').value.trim();
-
-  console.log(`Entered username: "${username}"`); // Debugging username
-
-  if (!username) {
-    alert('Please enter a valid username.');
-    return;
-  }
-
-  try {
-    console.log(`Fetching data for user: ${username}`); // Confirm username fetch
-
-    // Fetch player collection data via Cloudflare Worker
-    const collectionResponse = await fetch(`https://dry-bread-7ec1.dave-macd0426.workers.dev/?player=${username}`);
-    const collectionData = await collectionResponse.json();
-
-    if (!collectionData || !collectionData.cards || collectionData.cards.length === 0) {
-      alert(`No cards found for player "${username}". Please check the username.`);
-      return;
+document.getElementById("fetch-cards").addEventListener("click", async () => {
+    const username = document.getElementById("username").value;
+    if (!username) {
+        alert("Please enter a username");
+        return;
     }
 
-    console.log("Player data:", collectionData); // Debug fetched data
-
-    // Fetch card details
-    const detailsResponse = await fetch('https://api.splinterlands.io/cards/get_details');
-    const cardDetails = await detailsResponse.json();
-
-    displayCardsLazy(collectionData.cards, cardDetails);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    alert('Failed to fetch player data. Please try again later.');
-  }
+    try {
+        const response = await fetch(`https://late-bread-9bee.dave-macd0426.workers.dev/player?username=${encodeURIComponent(username)}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch data from the worker.");
+        }
+        const data = await response.json();
+        console.log("Player data:", data);
+        displayCards(data.cards);
+    } catch (error) {
+        console.error("Error:", error);
+        alert("There was an error fetching the player data. Please try again.");
+    }
 });
 
-// Function to display the player's cards lazily
-function displayCardsLazy(playerCards, a
+function displayCards(cards) {
+    const container = document.getElementById("cards-container");
+    container.innerHTML = ""; // Clear previous results
+    cards.forEach(card => {
+        const cardElement = document.createElement("div");
+        cardElement.className = "card";
+        cardElement.innerHTML = `
+            <img src="${card.image}" alt="${card.name}" />
+            <h3>${card.name}</h3>
+            <p>Level: ${card.level}</p>
+            <p>Gold: ${card.gold ? "Yes" : "No"}</p>
+        `;
+        container.appendChild(cardElement);
+    });
+}
