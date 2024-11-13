@@ -12,7 +12,7 @@ document.getElementById("fetch-cards").addEventListener("click", async () => {
         }
 
         const data = await response.json();
-        console.log("Player data:", data);
+        console.log("Player cards data:", data);
 
         if (data.cards && data.cards.length > 0) {
             renderCards(data.cards);
@@ -21,7 +21,7 @@ document.getElementById("fetch-cards").addEventListener("click", async () => {
         }
     } catch (error) {
         console.error("Fetch error:", error);
-        alert("There was an error fetching the player's data. Please try again.");
+        alert("There was an error fetching the player's card data. Please try again.");
     }
 });
 
@@ -33,7 +33,7 @@ function renderCards(cards) {
         const cardElement = document.createElement("div");
         cardElement.className = "card";
         cardElement.innerHTML = `
-            <img src="${card.image}" alt="${card.name}" onerror="this.onerror=null;this.src='placeholder.png';">
+            <img src="https://d36mxiodymuqjm.cloudfront.net/cards_by_level/${card.edition}/${card.card_detail_id}_lv${card.level}.png" alt="${card.name}" onerror="this.onerror=null;this.src='placeholder.png';">
             <h3>${card.name}</h3>
             <p>Level: ${card.level}</p>
             <p>Gold: ${card.gold ? "Yes" : "No"}</p>
