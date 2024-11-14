@@ -1,27 +1,43 @@
-document.getElementById("fetch-cards").addEventListener("click", async () => {
+document.getElementById("view-collection").addEventListener("click", async () => {
     const username = document.getElementById("username").value.trim();
     if (!username) {
-        alert("Please enter a valid username.");
+        alert("Please enter a username.");
         return;
     }
 
     try {
-        // Fetch player card collection
-        const response = await fetch(`https://api2.splinterlands.io/cards/collection/${username}`);
-        const data = await response.json();
+        const collectionResponse = await fetch(`https://black-sunset-c55b.dave-macd0426.workers.dev?username=${encodeURIComponent(username)}`);
+        if (!collectionResponse.ok) {
+            throw new Error("Failed to fetch collection data.");
+        }
+        const collectionData = await collectionResponse.json();
+        const cardDetailIds = collectionData.cards.map(card => card.card_detail_id);
+        
+        // Fetch card details for each card detail ID
+        const cardDetailsResponse = await fetch(`https://api.splinterlands.io/cards/get_details`);
+        if (!cardDetailsResponse.ok) {
+            throw new Error("Failed to fetch card details.");
+        }
+        const cardDetails = await cardDetailsResponse.json();
+        
+        const cardsWithDetails = collectionData.cards.map(card => {
+            const details = cardDetails.find(detail => detail.id === card.card_detail_id);
+            return {
+                ...card,
+                name: details ? details.name : 'Unknown',
+                image: details ? `https://d36mxiodymuqjm.cloudfront.net/cards_${details.editions}/${encodeURIComponent(details.name)}${card.gold ? '_gold' : ''}.png` : 'placeholder.png',
+                abilities: details ? details.stats.abilities || [] : []
+            };
+        });
 
-        // Fetch card details to match images and stats
-        const detailsResponse = await fetch('https://api.splinterlands.io/cards/get_details');
-        const allCardDetails = await detailsResponse.json();
-
-        displayCards(data.cards, allCardDetails);
+        displayCards(cardsWithDetails);
     } catch (error) {
         console.error("Error:", error);
-        alert("Could not fetch player data. Please try again later.");
+        alert("There was an error fetching the player data. Please try again.");
     }
 });
 
-function displayCards(cards, allCardDetails) {
+function displayCards(cards) {
     const container = document.getElementById("cards-container");
     container.innerHTML = "";
 
@@ -31,20 +47,15 @@ function displayCards(cards, allCardDetails) {
     }
 
     cards.forEach(card => {
-        const cardDetail = allCardDetails.find(detail => detail.id === card.card_detail_id);
-
-        const setPath = cardDetail.editions.includes("3") ? "chaos" : "unknown_set"; // Use more dynamic mapping
-        const imgSrc = `https://d36mxiodymuqjm.cloudfront.net/cards_${setPath}/${cardDetail.name}.png`;
-
         const cardElement = document.createElement("div");
         cardElement.className = "card";
 
         cardElement.innerHTML = `
-            <img src="${imgSrc}" alt="${cardDetail.name}">
-            <h3>${cardDetail.name || 'Unknown'}</h3>
-            <p>Level: ${card.level || 'N/A'}</p>
+            <img src="${card.image}" alt="${card.name}">
+            <h3>${card.name}</h3>
+            <p>Level: ${card.level}</p>
             <p>Gold: ${card.gold ? 'Yes' : 'No'}</p>
-            <p>Abilities: ${cardDetail.stats?.abilities?.join(", ") || 'None'}</p>
+            <p>Abilities: ${card.abilities.length > 0 ? card.abilities.join(', ') : 'None'}</p>
         `;
 
         container.appendChild(cardElement);
