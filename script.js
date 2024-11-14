@@ -1,44 +1,41 @@
-document.getElementById("fetch-cards").addEventListener("click", async () => {
-    const username = document.getElementById("username").value.trim();
-    if (!username) {
-        alert("Please enter a valid username.");
-        return;
+function getCardImage(card) {
+    const baseUrl = "https://d36mxiodymuqjm.cloudfront.net";
+
+    if (card.card_set === "alpha" || card.card_set === "beta") {
+        return `${baseUrl}/cards_${card.card_set}/${encodeURIComponent(card.name)}${card.gold ? "_gold" : ""}.png`;
+    } else if (card.card_set === "chaos" || card.card_set === "riftwatchers" || card.card_set === "untamed") {
+        return `${baseUrl}/cards_${card.card_set}/${encodeURIComponent(card.name)}${card.gold ? "_gold" : ""}.jpg`;
+    } else if (card.card_set === "soulboundrb") {
+        return `${baseUrl}/cards_soulboundrb/${encodeURIComponent(card.name)}${card.gold ? "_gold" : ""}.jpg`;
+    } else {
+        return "placeholder.png"; // Fallback in case no match
     }
+}
 
-    try {
-        const response = await fetch(`https://black-sunset-c55b.dave-macd0426.workers.dev?username=${encodeURIComponent(username)}`);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("Player data:", data);
-
-        if (data.cards && data.cards.length > 0) {
-            displayCards(data.cards);
-        } else {
-            document.getElementById("cards-container").innerHTML = "<p>No cards found for this player.</p>";
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("There was an error fetching the player's data. Please try again.");
-    }
-});
-
+// Update displayCards Function:
 function displayCards(cards) {
     const container = document.getElementById("cards-container");
     container.innerHTML = "";
 
+    if (!cards || cards.length === 0) {
+        container.innerHTML = "<p>No cards found for this player.</p>";
+        return;
+    }
+
     cards.forEach(card => {
         const cardElement = document.createElement("div");
         cardElement.className = "card";
+
+        const imageUrl = getCardImage(card);
+
         cardElement.innerHTML = `
-            <img src="${card.image}" alt="${card.name}">
-            <h3>${card.name}</h3>
+            <img src="${imageUrl}" alt="${card.name || 'Unknown'}" onerror="this.src='placeholder.png'">
+            <h3>${card.name || 'Unknown'}</h3>
             <p>Level: ${card.level || 'N/A'}</p>
             <p>Gold: ${card.gold ? 'Yes' : 'No'}</p>
-            <p>Abilities: ${card.abilities.length > 0 ? card.abilities.join(', ') : 'None'}</p>
+            <p>Abilities: ${card.abilities ? card.abilities.join(", ") : 'None'}</p>
         `;
+
         container.appendChild(cardElement);
     });
 }
