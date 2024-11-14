@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SplinterView</title>
+    <title>Splinterlands Player Stats</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Splinterlands Player Stats</h1>
-        <input type="text" id="username" placeholder="Enter username">
-        <button id="view-collection">View Collection</button>
+        <p>Enter a player's username to view their card collection and stats.</p>
+    </header>
+
+    <main>
+        <div id="search">
+            <input type="text" id="username" placeholder="Enter username" />
+            <button id="fetch-cards">View Collection</button>
+        </div>
         <div id="cards-container"></div>
-    </div>
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>
