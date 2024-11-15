@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://d36mxiodymuqjm.cloudfront.net data:;">
     <title>Splinterlands Player Stats</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Splinterlands Player Stats</h1>
-        <p>Enter a player's username to view their card collection and stats.</p>
-        <input type="text" id="username" placeholder="Enter Username" />
-        <button id="fetch-cards">View Collection</button>
-        <div id="cards-container" class="cards-container"></div>
-    </div>
+    </header>
+    <main>
+        <div id="form-container">
+            <input type="text" id="username" placeholder="Enter Player Username">
+            <button id="fetch-cards">View Collection</button>
+        </div>
+        <div id="cards-container"></div>
+    </main>
+    <footer>
+        <p>&copy; 2024 SplinterView</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>
