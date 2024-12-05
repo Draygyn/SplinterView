@@ -3,24 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://d36mxiodymuqjm.cloudfront.net data:;">
-    <title>Splinterlands Player Stats</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Splinterview</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
 </head>
 <body>
     <header>
-        <h1>Splinterlands Player Stats</h1>
+        <h1>Splinterview</h1>
+        <p>View Splinterlands card collections and card details.</p>
     </header>
     <main>
-        <div id="form-container">
-            <input type="text" id="username" placeholder="Enter Player Username">
-            <button id="fetch-cards">View Collection</button>
-        </div>
-        <div id="cards-container"></div>
+        <!-- Player Collection Lookup Section -->
+        <section id="collection-lookup">
+            <h2>Player Collection Lookup</h2>
+            <form id="collectionForm">
+                <label for="username">Player Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter player's username" required>
+                <button type="submit">Search Collection</button>
+            </form>
+            <div id="collectionResults">
+                <!-- Player collection results will appear here -->
+            </div>
+        </section>
+
+        <!-- Individual Card Lookup Section -->
+        <section id="card-lookup">
+            <h2>Individual Card Lookup</h2>
+            <form id="cardForm">
+                <label for="cardId">Card ID:</label>
+                <input type="text" id="cardId" name="cardId" placeholder="Enter card ID" required>
+                <button type="submit">Search Card</button>
+            </form>
+            <div id="cardResults">
+                <!-- Individual card results will appear here -->
+            </div>
+        </section>
     </main>
     <footer>
-        <p>&copy; 2024 SplinterView</p>
+        <p>Created by Splinterview Team</p>
     </footer>
-    <script src="script.js"></script>
+    <script src="scripts.js"></script> <!-- Link to the JavaScript file -->
 </body>
 </html>
+
