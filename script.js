@@ -1,62 +1,75 @@
-document.getElementById("fetch-cards").addEventListener("click", async () => {
-    const username = document.getElementById("username").value.trim();
-    if (!username) {
-        alert("Please enter a username");
-        return;
-    }
+// Function to fetch and display player collection
+document.getElementById('collectionForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const collectionResults = document.getElementById('collectionResults');
+    collectionResults.innerHTML = '<p>Loading collection...</p>';
 
     try {
-        const response = await fetch(`https://api.splinterlands.io/cards/collection/${encodeURIComponent(username)}`);
-        if (!response.ok) {
-            throw new Error("Failed to fetch card collection.");
-        }
-
+        // Use Cloudflare Worker to fetch collection data
+        const response = await fetch(`https://black-sunset-c55b.dave-macd0426.workers.dev?api=https://game-api.splinterlands.com/cards/collection/${username}`);
         const data = await response.json();
-        const detailedCards = await fetchCardDetails(data.cards);
-        displayCards(detailedCards);
+
+        if (data.cards && data.cards.length > 0) {
+            collectionResults.innerHTML = ''; // Clear loading message
+
+            // Display each card
+            data.cards.forEach((card) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('card');
+
+                // Add card image
+                const cardImage = document.createElement('img');
+                cardImage.src = `https://d36mxiodymuqjm.cloudfront.net/cards_v2/300x452/${card.card_detail_id}.png`; // Replace if needed
+                cardImage.alt = card.card_name;
+                cardDiv.appendChild(cardImage);
+
+                // Append card to results
+                collectionResults.appendChild(cardDiv);
+            });
+        } else {
+            collectionResults.innerHTML = '<p>No cards found for this player.</p>';
+        }
     } catch (error) {
-        console.error("Error:", error);
-        alert("Error fetching data: " + error.message);
+        console.error('Error fetching collection:', error);
+        collectionResults.innerHTML = '<p>Failed to load collection. Please try again later.</p>';
     }
 });
 
-async function fetchCardDetails(cards) {
+// Function to fetch and display individual card details
+document.getElementById('cardForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const cardId = document.getElementById('cardId').value.trim();
+    const cardResults = document.getElementById('cardResults');
+    cardResults.innerHTML = '<p>Loading card details...</p>';
+
     try {
-        const allDetailsResponse = await fetch('https://api.splinterlands.io/cards/get_details');
-        const cardDetails = await allDetailsResponse.json();
+        // Use Cloudflare Worker to fetch card details
+        const response = await fetch(`https://black-sunset-c55b.dave-macd0426.workers.dev?api=https://game-api.splinterlands.com/cards/find?id=${cardId}`);
+        const data = await response.json();
 
-        return cards.map(card => {
-            const details = cardDetails.find(detail => detail.id === card.card_detail_id);
-            return { ...card, ...details };
-        });
+        if (data && data.length > 0) {
+            cardResults.innerHTML = ''; // Clear loading message
+
+            // Display card details
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+
+            // Add card image
+            const cardImage = document.createElement('img');
+            cardImage.src = `https://d36mxiodymuqjm.cloudfront.net/cards_v2/300x452/${data[0].image}.png`; // Replace if needed
+            cardImage.alt = data[0].name;
+            cardDiv.appendChild(cardImage);
+
+            // Append card to results
+            cardResults.appendChild(cardDiv);
+        } else {
+            cardResults.innerHTML = '<p>No details found for this card ID.</p>';
+        }
     } catch (error) {
-        console.error("Error fetching card details:", error);
-        return cards; // fallback to original data
+        console.error('Error fetching card details:', error);
+        cardResults.innerHTML = '<p>Failed to load card details. Please try again later.</p>';
     }
-}
-
-function displayCards(cards) {
-    const container = document.getElementById("cards-container");
-    container.innerHTML = "";
-
-    if (!cards || cards.length === 0) {
-        container.innerHTML = "<p>No cards found for this player.</p>";
-        return;
-    }
-
-    cards.forEach(card => {
-        const cardElement = document.createElement("div");
-        cardElement.className = "card";
-
-        const imageUrl = `https://d36mxiodymuqjm.cloudfront.net/cards_v2.2/${card.name.replace(/\s/g, '%20')}${card.gold ? '_gold' : ''}.png`;
-
-        cardElement.innerHTML = `
-            <img src="${imageUrl}" alt="${card.name}" onerror="this.src='placeholder.png';">
-            <h3>${card.name || 'Unknown'} (Level: ${card.level || 'N/A'})</h3>
-            <p>Gold: ${card.gold ? "Yes" : "No"}</p>
-            <p>Abilities: ${card.abilities?.join(', ') || 'None'}</p>
-        `;
-
-        container.appendChild(cardElement);
-    });
-}
+});
