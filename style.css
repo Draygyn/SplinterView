@@ -1,71 +1,57 @@
+/* Basic styling for the page */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
     margin: 0;
     padding: 0;
+    background: #f4f4f9;
 }
 
 header {
-    text-align: center;
-    background-color: #4a148c;
+    background: #333;
     color: white;
-    padding: 1rem 0;
+    text-align: center;
+    padding: 20px;
 }
 
 main {
     padding: 20px;
 }
 
-#form-container {
-    display: flex;
-    justify-content: center;
+h2 {
+    color: #333;
+}
+
+form {
     margin-bottom: 20px;
 }
 
-#username {
-    padding: 10px;
-    font-size: 16px;
-    width: 250px;
-}
-
-#fetch-cards {
-    padding: 10px;
-    font-size: 16px;
-    margin-left: 10px;
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#fetch-cards:hover {
-    background-color: #3700b3;
-}
-
-#cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+#collectionResults, #cardResults {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
+    background: white;
+    border: 1px solid #ccc;
+    width: 150px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .card img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 10px;
+    width: 100%;
 }
 
-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #4a148c;
-    color: white;
+.abilities {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.abilities img {
+    width: 20px;
+    height: 20px;
+    margin: 0 2px;
 }
